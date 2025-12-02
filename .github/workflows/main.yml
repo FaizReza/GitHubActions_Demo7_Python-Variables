@@ -1,7 +1,8 @@
 ---
 # create variables at workflow, job and step level
 name: variables in python workflow
-on: workflow_dispatch
+on: 
+ push:
 env:
    PYTHON_VERSION: 3.9
 jobs:
@@ -17,6 +18,7 @@ jobs:
       with:
        python-version: ${{ env.PYTHON_VERSION }}          #workflow level variable
   job2-job-variables:
+   needs: job1-workflow-variables
    runs-on: ubuntu-latest
    env:
      JOB_PYTHON_VERSION: 3.8
@@ -28,6 +30,7 @@ jobs:
       with:
        python-version: ${{ env.JOB_PYTHON_VERSION }}    #job level variable
   job3-step-variables:
+   needs: job1-workflow-variables
    runs-on: ubuntu-latest
    steps:
     - name: Checkout code
@@ -40,5 +43,5 @@ jobs:
        python-version: ${{ env.STEP-PYTHON-VERSION }}     #step level variable
     - name: Print app message
       env:
-       APPLICATION: python
+       APPLICATION: python                                #step level variable
       run: echo "The application name is $APPLICATION"
